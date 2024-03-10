@@ -1,0 +1,5 @@
+//for building without GLAD
+gcc src/main.c -lglfw -lGL
+
+//for building with GLAD
+gcc src/main.c glad/src/gl.c -Iglad/include -lglfw -ldl
