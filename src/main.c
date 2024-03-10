@@ -5,7 +5,7 @@
 
 #include <GLFW/glfw3.h>
 
-const GLuint WIDTH = 640, HEIGHT = 480;
+const GLuint WINDOW_WIDTH = 640, WINDOW_HEIGHT = 480;
 
 static void key_callback(GLFWwindow *window, int key, int scancode, int action,
                          int mods) {
@@ -18,15 +18,17 @@ void error_callback(int error, const char *description) {
 }
 
 int main(void) {
-  if (!glfwInit())
+  if (!glfwInit()) {
+    fprintf(stderr, "Failed to initialize GLFW\n");
     return -1;
+  }
 
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   GLFWwindow *window =
-      glfwCreateWindow(WIDTH, HEIGHT, "GLFW Window", NULL, NULL);
+      glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "GLFW Window", NULL, NULL);
 
   glfwMakeContextCurrent(window);
 
@@ -38,14 +40,18 @@ int main(void) {
     return -1;
   }
 
-  int version = gladLoadGL(glfwGetProcAddress);
-  printf("OpenGL Version %d.%d\n", GLAD_VERSION_MAJOR(version),
-         GLAD_VERSION_MINOR(version));
+  gladLoadGL(glfwGetProcAddress);
 
   while (!glfwWindowShouldClose(window)) {
     glfwPollEvents();
 
     glClear(GL_COLOR_BUFFER_BIT);
+
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+    glViewport(0, 0, width, height);
+
+    // double time = glfwGetTime();
 
     glfwSwapBuffers(window);
   }
